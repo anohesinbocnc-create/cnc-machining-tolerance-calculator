@@ -1,0 +1,29 @@
+{
+  "title": "ISO 2768 general tolerances — reference data",
+  "description": "Permissible deviations for linear dimensions (ISO 2768-1, classes f/m/c/v) and straightness/flatness (ISO 2768-2, classes H/K/L). Transcribed from the published tables of ISO 2768-1:1989 and ISO 2768-2:1989. Units: millimetres.",
+  "range_semantics": "lower_bound_exclusive_upper_inclusive for ISO 2768-1 linear table; the ISO 2768-2 first row (0-10) is upper-inclusive and subsequent rows are lower-exclusive-upper-inclusive. A null value means the class is not defined for that range.",
+  "source_url": "https://www.sinbo-machining.com/wiki/tolerances/iso-2768",
+  "maintainer": "Sinbo Precision",
+  "maintainer_url": "https://www.sinbo-machining.com/",
+  "license": "MIT",
+  "tables": {
+    "linear_dimensions": [
+      { "range_mm": [0.5, 3],    "f": 0.05, "m": 0.1,  "c": 0.2, "v": null },
+      { "range_mm": [3, 6],      "f": 0.05, "m": 0.1,  "c": 0.3, "v": 0.5 },
+      { "range_mm": [6, 30],     "f": 0.1,  "m": 0.2,  "c": 0.5, "v": 1.0 },
+      { "range_mm": [30, 120],   "f": 0.15, "m": 0.3,  "c": 0.8, "v": 1.5 },
+      { "range_mm": [120, 400],  "f": 0.2,  "m": 0.5,  "c": 1.2, "v": 2.5 },
+      { "range_mm": [400, 1000], "f": 0.3,  "m": 0.8,  "c": 2.0, "v": 4.0 },
+      { "range_mm": [1000, 2000],"f": 0.5,  "m": 1.2,  "c": 3.0, "v": 6.0 },
+      { "range_mm": [2000, 4000],"f": null, "m": 2.0,  "c": 4.0, "v": 8.0 }
+    ],
+    "straightness_flatness": [
+      { "range_mm": [0, 10],    "H": 0.05, "K": 0.1, "L": 0.2 },
+      { "range_mm": [10, 30],   "H": 0.1,  "K": 0.2, "L": 0.4 },
+      { "range_mm": [30, 100],  "H": 0.2,  "K": 0.4, "L": 0.8 },
+      { "range_mm": [100, 300], "H": 0.3,  "K": 0.6, "L": 1.2 },
+      { "range_mm": [300, 1000],"H": 0.4,  "K": 0.8, "L": 1.6 },
+      { "range_mm": [1000, 3000],"H": 0.5, "K": 1.0, "L": 2.0 }
+    ]
+  }
+}

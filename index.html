@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CNC Machining Tolerance Calculator (ISO 2768) — Free Online Tool</title>
+<meta name="description" content="Free ISO 2768 general tolerance calculator: look up f/m/c/v linear tolerances and H/K/L straightness-flatness for any nominal dimension. Includes full reference tables and machine-readable data.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "CNC Machining Tolerance Calculator (ISO 2768)",
+  "applicationCategory": "EngineeringApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0" },
+  "description": "ISO 2768-1 linear general tolerance calculator (f/m/c/v classes) and ISO 2768-2 straightness/flatness calculator (H/K/L), with full reference tables and downloadable CSV/JSON data.",
+  "author": { "@type": "Organization", "name": "Sinbo Precision", "url": "https://www.sinbo-machining.com/" }
+}
+</script>
+<style>
+:root { --ink:#1f2933; --muted:#616e7c; --line:#e4e7eb; --accent:#1a5fb4; --bg:#f9fafb; }
+* { box-sizing: border-box; }
+body { margin:0; font:16px/1.55 -apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; color:var(--ink); background:#fff; }
+main { max-width: 880px; margin: 0 auto; padding: 24px 20px 64px; }
+h1 { font-size: 1.7rem; margin: .2em 0 .2em; }
+h2 { font-size: 1.25rem; margin-top: 2.2em; border-bottom: 1px solid var(--line); padding-bottom: .3em; }
+p.lead { color: var(--muted); margin-top: 0; }
+.panel { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; margin: 18px 0; }
+label { display:block; font-weight:600; margin: 10px 0 4px; }
+input[type=number], select { font-size:1rem; padding:8px 10px; border:1px solid #cbd2d9; border-radius:8px; width:100%; max-width:320px; background:#fff; }
+.result { font-size:1.15rem; margin-top:14px; padding:12px 14px; border-radius:8px; background:#e8f0fe; }
+.result b { font-family: ui-monospace,Menlo,Consolas,monospace; font-size:1.3rem; }
+.result .range { color:var(--muted); font-size:.95rem; display:block; margin-top:2px; }
+table { border-collapse: collapse; width:100%; margin: 14px 0; font-size: .95rem; }
+th, td { border: 1px solid var(--line); padding: 7px 10px; text-align:center; }
+th { background: var(--bg); }
+td.hit { background:#e8f0fe; font-weight:700; }
+.note { color: var(--muted); font-size: .9rem; }
+footer { margin-top: 3em; border-top: 1px solid var(--line); padding-top: 16px; color: var(--muted); font-size: .92rem; }
+footer a, .note a { color: var(--accent); }
+code { background: var(--bg); padding: 1px 5px; border-radius: 4px; }
+.err { color:#b3261e; }
+</style>
+</head>
+<body>
+<main>
+  <h1>CNC Machining Tolerance Calculator</h1>
+  <p class="lead">General tolerances per <strong>ISO&nbsp;2768-1</strong> (linear dimensions, classes f/m/c/v) and
+  <strong>ISO&nbsp;2768-2</strong> (straightness &amp; flatness, classes H/K/L). Enter a nominal dimension in millimetres —
+  no sign-up, runs entirely in your browser, works offline.</p>
+
+  <div class="panel">
+    <h2 style="margin-top:0;border:none;">1 · Linear tolerance (ISO 2768-1)</h2>
+    <label for="dim">Nominal dimension (mm)</label>
+    <input type="number" id="dim" min="0.5" max="4000" step="any" placeholder="e.g. 45.6" autofocus>
+    <label for="cls">General tolerance class</label>
+    <select id="cls">
+      <option value="f">f — fine</option>
+      <option value="m" selected>m — medium</option>
+      <option value="c">c — coarse</option>
+      <option value="v">v — very coarse</option>
+    </select>
+    <div class="result" id="linOut" hidden></div>
+  </div>
+
+  <div class="panel">
+    <h2 style="margin-top:0;border:none;">2 · Straightness &amp; flatness (ISO 2768-2)</h2>
+    <label for="dim2">Nominal length (mm)</label>
+    <input type="number" id="dim2" min="0.1" max="3000" step="any" placeholder="e.g. 250">
+    <label for="cls2">Geometrical class</label>
+    <select id="cls2">
+      <option value="H" selected>H — fine</option>
+      <option value="K">K — medium</option>
+      <option value="L">L — coarse</option>
+    </select>
+    <div class="result" id="geoOut" hidden></div>
+  </div>
+
+  <h2>ISO 2768-1 — permissible deviations for linear dimensions (mm)</h2>
+  <table id="linTable">
+    <thead><tr><th>Nominal size range (mm)</th><th>f</th><th>m</th><th>c</th><th>v</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <p class="note">Tolerance class applies when the drawing bears a general note such as <code>ISO 2768-mK</code>.
+  A dash (—) means the class is not defined for that range.</p>
+
+  <h2>ISO 2768-2 — straightness &amp; flatness tolerances (mm)</h2>
+  <table id="geoTable">
+    <thead><tr><th>Nominal length range (mm)</th><th>H</th><th>K</th><th>L</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Machine-readable data</h2>
+  <p>The tables above are also available as plain data files for scripts and tools:
+  <a href="data/iso-2768-1-linear.csv">iso-2768-1-linear.csv</a> ·
+  <a href="data/iso-2768-2-flatness.csv">iso-2768-2-flatness.csv</a> ·
+  <a href="data/iso-2768.json">iso-2768.json</a></p>
+
+  <h2>Scope &amp; limitations</h2>
+  <p>ISO 2768 applies to <em>non-fit</em> dimensions without individual tolerance indications — it does
+  <strong>not</strong> apply to mating features (use ISO 286 hole/shaft fits instead), to features with
+  individual tolerances on the drawing, or to edges, chamfers and radii unless stated.
+  For bearing bores, seal grooves and similar functional features, tolerance the drawing explicitly.</p>
+
+  <footer>
+    Maintained by <a href="https://www.sinbo-machining.com/">Sinbo Precision</a> —
+    CNC machining &amp; precision manufacturing, Dongguan, China.
+    Extended guide: <a href="https://www.sinbo-machining.com/wiki/tolerances/iso-2768">ISO 2768 explained</a> ·
+    <a href="https://www.sinbo-machining.com/wiki/tolerances/gdt">GD&amp;T reference</a> ·
+    <a href="https://www.sinbo-machining.com/parts/">515+ machined part families</a>.<br>
+    Data transcribed from the public tables of ISO 2768-1:1989 and ISO 2768-2:1989 (the standard text itself
+    is copyrighted by ISO and must be purchased from iso.org). License: <a href="LICENSE">MIT</a>.
+  </footer>
+</main>
+
+<script>
+const LINEAR = [
+  { min: 0.5,  max: 3,    f: 0.05, m: 0.1, c: 0.2,  v: null },
+  { min: 3,    max: 6,    f: 0.05, m: 0.1, c: 0.3,  v: 0.5 },
+  { min: 6,    max: 30,   f: 0.1,  m: 0.2, c: 0.5,  v: 1.0 },
+  { min: 30,   max: 120,  f: 0.15, m: 0.3, c: 0.8,  v: 1.5 },
+  { min: 120,  max: 400,  f: 0.2,  m: 0.5, c: 1.2,  v: 2.5 },
+  { min: 400,  max: 1000, f: 0.3,  m: 0.8, c: 2.0,  v: 4.0 },
+  { min: 1000, max: 2000, f: 0.5,  m: 1.2, c: 3.0,  v: 6.0 },
+  { min: 2000, max: 4000, f: null, m: 2.0, c: 4.0,  v: 8.0 }
+];
+const FLAT = [
+  { min: 0,    max: 10,   H: 0.05, K: 0.1, L: 0.2 },
+  { min: 10,   max: 30,   H: 0.1,  K: 0.2, L: 0.4 },
+  { min: 30,   max: 100,  H: 0.2,  K: 0.4, L: 0.8 },
+  { min: 100,  max: 300,  H: 0.3,  K: 0.6, L: 1.2 },
+  { min: 300,  max: 1000, H: 0.4,  K: 0.8, L: 1.6 },
+  { min: 1000, max: 3000, H: 0.5,  K: 1.0, L: 2.0 }
+];
+// ISO range convention: lower bound exclusive, upper bound inclusive
+const inRange = (row, d) => d > row.min && d <= row.max;
+const fmt = (v) => (v === null ? "—" : "±" + v);
+
+function findRow(rows, d) { return rows.find(r => inRange(r, d)) || null; }
+
+function showLinear() {
+  const d = parseFloat(document.getElementById("dim").value);
+  const cls = document.getElementById("cls").value;
+  const out = document.getElementById("linOut");
+  out.hidden = true; out.classList.remove("err");
+  highlight("linTable", -1, -1);
+  if (!isFinite(d) || d <= 0) return;
+  const row = findRow(LINEAR, d);
+  if (!row) {
+    out.hidden = false; out.classList.add("err");
+    out.textContent = "Dimension out of ISO 2768-1 scope (0.5–4000 mm). Tolerance the drawing explicitly.";
+    return;
+  }
+  const t = row[cls];
+  if (t === null) {
+    out.hidden = false; out.classList.add("err");
+    out.textContent = `Class ${cls} is not defined for the ${row.min}–${row.max} mm range. Choose another class.`;
+    return;
+  }
+  out.hidden = false;
+  out.innerHTML = `${d} mm, class <code>${cls}</code> → <b>±${t} mm</b>` +
+    `<span class="range">accepted range: ${(d - t).toFixed(3)} – ${(d + t).toFixed(3)} mm</span>`;
+  highlight("linTable", LINEAR.indexOf(row), ["f", "m", "c", "v"].indexOf(cls));
+}
+
+function showGeo() {
+  const d = parseFloat(document.getElementById("dim2").value);
+  const cls = document.getElementById("cls2").value;
+  const out = document.getElementById("geoOut");
+  out.hidden = true; out.classList.remove("err");
+  highlight("geoTable", -1, -1);
+  if (!isFinite(d) || d <= 0) return;
+  const row = findRow(FLAT, d);
+  if (!row) {
+    out.hidden = false; out.classList.add("err");
+    out.textContent = "Length out of ISO 2768-2 scope (up to 3000 mm). Tolerance the drawing explicitly.";
+    return;
+  }
+  const t = row[cls];
+  out.hidden = false;
+  out.innerHTML = `${d} mm, class <code>${cls}</code> → straightness / flatness tolerance <b>${t.toFixed(2)} mm</b>`;
+  highlight("geoTable", FLAT.indexOf(row), ["H", "K", "L"].indexOf(cls));
+}
+
+function highlight(tableId, rowIndex, colIndex) {
+  const tb = document.getElementById(tableId).tBodies[0];
+  [...tb.rows].forEach((tr, i) => {
+    [...tr.cells].forEach((td, j) => td.classList.toggle("hit", i === rowIndex && j === colIndex + 1));
+  });
+}
+
+// build tables
+const linTb = document.querySelector("#linTable tbody");
+LINEAR.forEach(r => {
+  linTb.insertAdjacentHTML("beforeend",
+    `<tr><td>${r.min} – ${r.max}</td><td>${fmt(r.f)}</td><td>${fmt(r.m)}</td><td>${fmt(r.c)}</td><td>${fmt(r.v)}</td></tr>`);
+});
+const geoTb = document.querySelector("#geoTable tbody");
+FLAT.forEach(r => {
+  const lo = r.min === 0 ? "≤" + r.max : r.min + " – " + r.max;
+  geoTb.insertAdjacentHTML("beforeend",
+    `<tr><td>${lo}</td><td>${r.H.toFixed(2)}</td><td>${r.K.toFixed(2)}</td><td>${r.L.toFixed(2)}</td></tr>`);
+});
+
+document.getElementById("dim").addEventListener("input", showLinear);
+document.getElementById("cls").addEventListener("change", showLinear);
+document.getElementById("dim2").addEventListener("input", showGeo);
+document.getElementById("cls2").addEventListener("change", showGeo);
+</script>
+</body>
+</html>
